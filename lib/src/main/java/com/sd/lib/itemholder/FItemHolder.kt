@@ -62,6 +62,14 @@ open class FItemHolder<T> {
     }
 
     /**
+     * 销毁当前对象
+     */
+    protected fun destroy() {
+        remove(getTarget())
+        clearItem()
+    }
+
+    /**
      * 初始化Item
      */
     protected open fun <I : Item<T>> initItem(item: I, target: T) {
@@ -114,8 +122,10 @@ open class FItemHolder<T> {
 
         @JvmStatic
         @Synchronized
-        internal fun removeActivity(activity: Activity) {
-            MAP_HOLDER.remove(activity)
+        private fun remove(target: Any?) {
+            if (target != null) {
+                MAP_HOLDER.remove(target)
+            }
         }
     }
 }

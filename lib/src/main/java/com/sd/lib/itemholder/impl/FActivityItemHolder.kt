@@ -40,8 +40,7 @@ internal class FActivityItemHolder : FItemHolder<Activity> {
         override fun onActivityDestroyed(activity: Activity) {
             if (getTarget() == activity) {
                 activity.application.unregisterActivityLifecycleCallbacks(this)
-                removeActivity(activity)
-                clearItem()
+                destroy()
             }
         }
     }
