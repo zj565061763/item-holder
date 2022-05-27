@@ -16,10 +16,6 @@ open class FItemHolder<T> {
         _targetRef = WeakReference(target)
     }
 
-    protected fun getTarget(): T? {
-        return _targetRef.get()
-    }
-
     /**
      * 获取Item
      */
@@ -59,6 +55,10 @@ open class FItemHolder<T> {
             it.destroy()
         }
         _mapItemHolder.clear()
+    }
+
+    protected fun getTarget(): T? {
+        return _targetRef.get()
     }
 
     /**
