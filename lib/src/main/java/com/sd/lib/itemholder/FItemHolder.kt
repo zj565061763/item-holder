@@ -29,6 +29,7 @@ open class FItemHolder<T> {
     /**
      * 保存Item
      */
+    @Synchronized
     fun putItem(item: Any) {
         val clazz = item::class.java
         _mapItemHolder[clazz] = item
