@@ -108,14 +108,14 @@ open class FItemHolder<T> {
 
         @JvmStatic
         @Synchronized
-        fun activity(context: Context): FItemHolder<Activity> {
-            require(context is Activity) { "context must be ${Activity::class.java}" }
-            val cache = MAP_HOLDER[context]
+        fun activity(target: Context): FItemHolder<Activity> {
+            require(target is Activity) { "target must be instance of ${Activity::class.java}" }
+            val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FActivityItemHolder
 
-            val holder = FActivityItemHolder(context)
-            if (!context.isFinishing) {
-                MAP_HOLDER[context] = holder
+            val holder = FActivityItemHolder(target)
+            if (!target.isFinishing) {
+                MAP_HOLDER[target] = holder
             }
             return holder
         }
