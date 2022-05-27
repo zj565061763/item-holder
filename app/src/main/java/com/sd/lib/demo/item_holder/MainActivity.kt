@@ -9,6 +9,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        require(
+            FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
+                    == FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
+        )
 
         val testItem = FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
         testItem.sayHello()
