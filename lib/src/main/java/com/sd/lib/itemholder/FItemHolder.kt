@@ -21,7 +21,6 @@ open class FItemHolder<T> {
      */
     @Synchronized
     fun <I> getItem(clazz: Class<I>): I? {
-        checkItemClass(clazz)
         val item = _mapItemHolder[clazz] ?: return null
         return item as I
     }
@@ -31,8 +30,15 @@ open class FItemHolder<T> {
      */
     @Synchronized
     fun putItem(item: Any) {
-        val clazz = item::class.java
-        _mapItemHolder[clazz] = item
+        _mapItemHolder[item::class.java] = item
+    }
+
+    /**
+     * 保存Item
+     */
+    @Synchronized
+    fun <I> putItem(clazz: Class<in I>, item: I) {
+        _mapItemHolder[clazz] = item!!
     }
 
     /**
