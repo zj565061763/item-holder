@@ -14,7 +14,7 @@ class TestItem : FItemHolder.Item<Activity> {
         Log.i(MainActivity.TAG, "sayHello item:$this")
     }
 
-    override fun destroy() {
-        Log.i(MainActivity.TAG, "destroy item:$this")
+    override fun close() {
+        Log.i(MainActivity.TAG, "close item:$this")
     }
 }

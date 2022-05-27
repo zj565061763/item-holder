@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier
 import java.util.*
 
 open class FItemHolder<T> {
-    private val _mapItemHolder = mutableMapOf<Class<out Item<T>>, Item<T>>()
+    private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
     private val _targetRef: WeakReference<T>
 
     constructor(target: T) {
@@ -20,10 +20,18 @@ open class FItemHolder<T> {
      * 获取Item
      */
     @Synchronized
-    fun <I : Item<T>> getItem(clazz: Class<I>): I? {
+    fun <I> getItem(clazz: Class<I>): I? {
         checkItemClass(clazz)
         val item = _mapItemHolder[clazz] ?: return null
         return item as I
+    }
+
+    /**
+     * 保存Item
+     */
+    fun putItem(item: Any) {
+        val clazz = item::class.java
+        _mapItemHolder[clazz] = item
     }
 
     /**
@@ -52,7 +60,13 @@ open class FItemHolder<T> {
     @Synchronized
     fun clearItem() {
         _mapItemHolder.values.forEach {
-            it.destroy()
+            if (it is AutoCloseable) {
+                try {
+                    it.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
         _mapItemHolder.clear()
     }
@@ -87,20 +101,16 @@ open class FItemHolder<T> {
         return null
     }
 
-    private fun <I : Item<*>> checkItemClass(clazz: Class<I>) {
+    private fun checkItemClass(clazz: Class<*>) {
         require(!clazz.isInterface) { "class must not be an interface" }
         require(!Modifier.isAbstract(clazz.modifiers)) { "class must not be abstract" }
     }
 
-    interface Item<T> {
+    interface Item<T> : AutoCloseable {
         /**
          * 初始化
          */
         fun init(target: T)
-        /**
-         * 销毁
-         */
-        fun destroy()
     }
 
     companion object {
