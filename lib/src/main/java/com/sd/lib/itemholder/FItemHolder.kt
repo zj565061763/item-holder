@@ -106,7 +106,7 @@ open class FItemHolder<T>(target: T) {
     }
 
     /**
-     * 将当前对象，从[MAP_HOLDER]移除，会清空所有Item。
+     * 将当前对象，从[MAP_HOLDER]中移除，并清空所有Item。
      * 子类需要在合适的时机调用销毁，否则当前对象会一直被持有。
      */
     @Synchronized
