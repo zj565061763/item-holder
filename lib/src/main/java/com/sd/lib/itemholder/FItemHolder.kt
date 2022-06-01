@@ -160,6 +160,10 @@ open class FItemHolder<T> protected constructor(target: T) {
     companion object {
         private val MAP_HOLDER = mutableMapOf<Any, FItemHolder<*>>()
 
+        /**
+         * 返回activity对应的holder，对象第一次被创建的时候会触发[attach]，并在activity销毁的时候触发[detach]。
+         * 在activity的整个生命周期中，此方法返回的是与该activity绑定的同一个holder对象，直到该holder被[detach]。
+         */
         @JvmStatic
         fun activity(target: Context): FItemHolder<Activity> {
             require(target is Activity) { "context should be instance of ${Activity::class.java}" }
@@ -169,8 +173,8 @@ open class FItemHolder<T> protected constructor(target: T) {
         }
 
         /**
-         * 返回target对应的holder，开发者需要手动触发[attach]和[detach]来管理对象的生命周期。
-         * 调用[attach]之后，再次调用此方法，则返回的是同一个holder对象，直到该holder被[detach]
+         * 返回target对应的holder，开发者需要手动触发[attach]和[detach]来管理生命周期。
+         * [attach]之后，此方法返回的是与该target绑定的同一个holder对象，直到该holder被[detach]。
          */
         @JvmStatic
         fun <T : Any> target(target: T): FItemHolder<T> {
