@@ -5,16 +5,22 @@ import android.app.Application
 import android.os.Bundle
 import com.sd.lib.itemholder.FItemHolder
 
-internal class FActivityItemHolder : FItemHolder<Activity> {
-    constructor(activity: Activity) : super(activity) {
-        if (!activity.isFinishing) {
-            activity.application.registerActivityLifecycleCallbacks(_lifecycleCallback)
-        }
-    }
+internal class FActivityItemHolder(activity: Activity) : FItemHolder<Activity>(activity) {
 
     override fun <I : Item<Activity>> initItem(item: I, target: Activity): Boolean {
         if (target.isFinishing) return false
         return super.initItem(item, target)
+    }
+
+    override fun onAttach(): Boolean {
+        if (getTarget().isFinishing) return false
+        getTarget().application.registerActivityLifecycleCallbacks(_lifecycleCallback)
+        return super.onAttach()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        getTarget().application.unregisterActivityLifecycleCallbacks(_lifecycleCallback)
     }
 
     private val _lifecycleCallback = object : Application.ActivityLifecycleCallbacks {
@@ -38,7 +44,6 @@ internal class FActivityItemHolder : FItemHolder<Activity> {
 
         override fun onActivityDestroyed(activity: Activity) {
             if (getTarget() == activity) {
-                activity.application.unregisterActivityLifecycleCallbacks(this)
                 detach()
             }
         }
