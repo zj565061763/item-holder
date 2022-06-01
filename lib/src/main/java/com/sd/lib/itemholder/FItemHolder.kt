@@ -67,7 +67,9 @@ open class FItemHolder<T>(target: T) {
         val item = createItem(clazz)
         _mapItemHolder[clazz] = item
 
-        if (!isDestroyed) {
+        if (isDestroyed) {
+            // 已经销毁了，不初始化
+        } else {
             initItem(item, _target)
         }
         return item
