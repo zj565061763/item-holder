@@ -15,6 +15,10 @@ open class FItemHolder<T>(target: T) {
         _targetRef = WeakReference(target)
     }
 
+    protected fun getTarget(): T? {
+        return _targetRef.get()
+    }
+
     /**
      * 获取Item
      */
@@ -63,6 +67,13 @@ open class FItemHolder<T>(target: T) {
     }
 
     /**
+     * 初始化Item
+     */
+    protected open fun <I : Item<T>> initItem(item: I, target: T) {
+        item.init(target)
+    }
+
+    /**
      * 清空所有Item
      */
     @Synchronized
@@ -79,23 +90,14 @@ open class FItemHolder<T>(target: T) {
         _mapItemHolder.clear()
     }
 
-    protected fun getTarget(): T? {
-        return _targetRef.get()
-    }
-
     /**
      * 销毁当前对象
+     *
+     * 如果自定义了实现类，需要在合适的时机调用此方法销毁，否则会一直被持有
      */
-    protected fun destroy() {
+    protected open fun destroy() {
         remove(getTarget())
         clearItem()
-    }
-
-    /**
-     * 初始化Item
-     */
-    protected open fun <I : Item<T>> initItem(item: I, target: T) {
-        item.init(target)
     }
 
     private fun <I : Item<T>> createItem(clazz: Class<I>): I? {
