@@ -45,7 +45,9 @@ open class FItemHolder<T>(target: T) {
      */
     @Synchronized
     fun <I : Item<T>> getOrCreateItem(clazz: Class<I>): I {
-        checkItemClass(clazz)
+        require(!clazz.isInterface) { "class should not be an interface." }
+        require(!Modifier.isAbstract(clazz.modifiers)) { "class should not be abstract." }
+
         val cache = _mapItemHolder[clazz]
         if (cache != null) return cache as I
 
@@ -105,11 +107,6 @@ open class FItemHolder<T>(target: T) {
             e.printStackTrace()
         }
         return null
-    }
-
-    private fun checkItemClass(clazz: Class<*>) {
-        require(!clazz.isInterface) { "class must not be an interface" }
-        require(!Modifier.isAbstract(clazz.modifiers)) { "class must not be abstract" }
     }
 
     interface Item<T> : AutoCloseable {
