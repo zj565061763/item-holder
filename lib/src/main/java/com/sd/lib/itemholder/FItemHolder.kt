@@ -108,18 +108,28 @@ open class FItemHolder<T>(target: T) {
      * 销毁当前对象。
      * 如果自定义了子类，需要在合适的时机调用销毁，否则当前对象会一直被[MAP_HOLDER]持有。
      */
-    protected open fun destroy() {
+    protected fun destroy() {
         if (isDestroyed) return
 
         /**
          * 销毁之后不需要重置[_target]为null，因为[MAP_HOLDER]已经不持有当前对象了。
-         * 如果外部持有了当前对象，要自己注意不要延长当前对象的生命周期，导致内存泄露
+         * 如果外部持有了当前对象，要自己注意不要延长当前对象的生命周期，导致内存泄露。
          */
         isDestroyed = true
+        /**
+         * 销毁逻辑真正执行之前触发销毁回调，允许子类在回调中获取Item，做一些额外的销毁操作。
+         */
+        onDestroy()
+
         remove(_target)
         clearItem()
     }
 
+    /**
+     * 销毁回调
+     */
+    protected open fun onDestroy() {
+    }
 
     interface Item<T> : AutoCloseable {
         /**
