@@ -56,9 +56,8 @@ open class FItemHolder<T>(target: T) {
         if (cache != null) return cache as I
 
         val item = createItem(clazz)
-        requireNotNull(item) { "createItem return null" }
-
         _mapItemHolder[clazz] = item
+
         val target = getTarget()
         if (target != null) {
             initItem(item, target)
@@ -100,15 +99,11 @@ open class FItemHolder<T>(target: T) {
         clearItem()
     }
 
-    private fun <I : Item<T>> createItem(clazz: Class<I>): I? {
-        try {
-            return clazz.newInstance()
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        } catch (e: InstantiationException) {
-            e.printStackTrace()
-        }
-        return null
+    /**
+     * 创建Item
+     */
+    protected open fun <I : Item<T>> createItem(clazz: Class<I>): I {
+        return clazz.newInstance()
     }
 
     interface Item<T> : AutoCloseable {
