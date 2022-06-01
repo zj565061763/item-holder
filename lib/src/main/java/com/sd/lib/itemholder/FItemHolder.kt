@@ -181,7 +181,7 @@ open class FItemHolder<T> protected constructor(target: T) {
             require(target !is Activity) { "You should use activity() instead" }
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FItemHolder<T>
-            return FItemHolder(target).also { it.attach() }
+            return FItemHolder(target)
         }
 
         /**
