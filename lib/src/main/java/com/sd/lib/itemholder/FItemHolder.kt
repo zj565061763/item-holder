@@ -115,7 +115,7 @@ open class FItemHolder<T>(target: T) {
 
         /**
          * 销毁之后不需要重置[_target]为null，因为[MAP_HOLDER]已经不持有当前对象了。
-         * 如果外部持有了当前对象，要自己注意不要延长当前对象的生命周期，导致内存泄露。
+         * 外部不应该主动持有当前对象，延长当前对象的生命周期。
          */
         isDestroyed = true
         /**
