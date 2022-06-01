@@ -218,11 +218,8 @@ open class FItemHolder<T> protected constructor(target: T) {
         private fun addHolder(holder: FItemHolder<*>) {
             val target = holder._target!!
             synchronized(MAP_HOLDER) {
-                if (MAP_HOLDER.containsKey(target)) {
-                    throw RuntimeException("there is a holder has attached with target:$target")
-                } else {
-                    MAP_HOLDER[target] = holder
-                }
+                checkHasHolder(holder)
+                MAP_HOLDER[target] = holder
             }
         }
 
@@ -232,6 +229,13 @@ open class FItemHolder<T> protected constructor(target: T) {
         private fun removeHolder(holder: FItemHolder<*>) {
             synchronized(MAP_HOLDER) {
                 MAP_HOLDER.remove(holder._target)
+            }
+        }
+
+        private fun checkHasHolder(holder: FItemHolder<*>) {
+            val target = holder._target!!
+            if (MAP_HOLDER.containsKey(target)) {
+                throw RuntimeException("there is a holder has attached with target:$target")
             }
         }
     }
