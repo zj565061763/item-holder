@@ -40,6 +40,14 @@ class MainActivity : AppCompatActivity() {
         item?.startRun()
     }
 
+    fun testCrash() {
+        val holder1 = FItemHolder.target(TAG)
+        val holder2 = FItemHolder.target(TAG)
+        require(holder1 !== holder2)
+        holder1.attach()
+        holder2.attach()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Handler(Looper.getMainLooper()).postDelayed({
