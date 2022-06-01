@@ -184,11 +184,11 @@ open class FItemHolder<T>(target: T) {
         private fun addHolder(holder: FItemHolder<*>) {
             val target = holder._target!!
             synchronized(MAP_HOLDER) {
-                if (MAP_HOLDER.containsKey(target)) {
+                val oldHolder = MAP_HOLDER[target]
+                if (oldHolder != null && oldHolder !== holder) {
                     throw RuntimeException("target holder has been attached.")
-                } else {
-                    MAP_HOLDER[target] = holder
                 }
+                MAP_HOLDER[target] = holder
             }
         }
 
