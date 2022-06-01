@@ -12,10 +12,9 @@ internal class FActivityItemHolder : FItemHolder<Activity> {
         }
     }
 
-    override fun <I : Item<Activity>> initItem(item: I, target: Activity) {
-        if (!target.isFinishing) {
-            super.initItem(item, target)
-        }
+    override fun <I : Item<Activity>> initItem(item: I, target: Activity): Boolean {
+        if (target.isFinishing) return false
+        return super.initItem(item, target)
     }
 
     private val _lifecycleCallback = object : Application.ActivityLifecycleCallbacks {
@@ -40,7 +39,7 @@ internal class FActivityItemHolder : FItemHolder<Activity> {
         override fun onActivityDestroyed(activity: Activity) {
             if (getTarget() == activity) {
                 activity.application.unregisterActivityLifecycleCallbacks(this)
-                destroy()
+                detach()
             }
         }
     }

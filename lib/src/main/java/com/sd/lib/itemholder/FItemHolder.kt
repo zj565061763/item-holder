@@ -11,14 +11,11 @@ open class FItemHolder<T>(target: T) {
     private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
 
     /**
-     * 当前对象是否已经被销毁
+     * 当前对象是否已经添加到[MAP_HOLDER]
      */
     @Volatile
-    var isDestroyed = false
-        private set(value) {
-            require(value)
-            field = value
-        }
+    var isAttached = false
+        private set
 
     init {
         _target = target
@@ -31,7 +28,6 @@ open class FItemHolder<T>(target: T) {
     /**
      * 获取Item
      */
-    @Synchronized
     fun <I> getItem(clazz: Class<I>): I? {
         val item = _mapItemHolder[clazz] ?: return null
         return item as I
@@ -42,7 +38,9 @@ open class FItemHolder<T>(target: T) {
      */
     @Synchronized
     fun putItem(item: Any) {
-        _mapItemHolder[item.javaClass] = item
+        if (isAttached) {
+            _mapItemHolder[item.javaClass] = item
+        }
     }
 
     /**
@@ -50,7 +48,9 @@ open class FItemHolder<T>(target: T) {
      */
     @Synchronized
     fun <I> putItem(clazz: Class<in I>, item: I) {
-        _mapItemHolder[clazz] = item!!
+        if (isAttached) {
+            _mapItemHolder[clazz] = item!!
+        }
     }
 
     /**
@@ -65,12 +65,10 @@ open class FItemHolder<T>(target: T) {
         if (cache != null) return cache as I
 
         val item = createItem(clazz)
-        _mapItemHolder[clazz] = item
-
-        if (isDestroyed) {
-            // 已经销毁了，不初始化
-        } else {
-            initItem(item, _target)
+        if (isAttached) {
+            if (initItem(item, _target)) {
+                _mapItemHolder[clazz] = item
+            }
         }
         return item
     }
@@ -85,15 +83,30 @@ open class FItemHolder<T>(target: T) {
     /**
      * 初始化Item
      */
-    protected open fun <I : Item<T>> initItem(item: I, target: T) {
+    protected open fun <I : Item<T>> initItem(item: I, target: T): Boolean {
         item.init(target)
+        return true
     }
 
     /**
-     * 清空所有Item
+     * 将当前对象，从[MAP_HOLDER]移除，会清空所有Item。
+     * 子类需要在合适的时机调用销毁，否则当前对象会一直被持有。
      */
     @Synchronized
-    fun clearItem() {
+    protected fun detach() {
+        if (!isAttached) return
+
+        /**
+         * 销毁之后不需要重置[_target]为null，因为[MAP_HOLDER]已经不持有当前对象了。
+         * 外部不应该主动持有当前对象，延长当前对象的生命周期。
+         */
+        isAttached = false
+        /**
+         * 销毁逻辑真正执行之前触发销毁回调，允许子类在回调中获取Item，做一些额外的销毁操作。
+         */
+        onDetach()
+        remove(_target)
+
         _mapItemHolder.values.forEach {
             if (it is AutoCloseable) {
                 try {
@@ -107,30 +120,9 @@ open class FItemHolder<T>(target: T) {
     }
 
     /**
-     * 销毁当前对象。
-     * 如果自定义了子类，需要在合适的时机调用销毁，否则当前对象会一直被[MAP_HOLDER]持有。
+     * 当前对象被移除回调
      */
-    protected fun destroy() {
-        if (isDestroyed) return
-
-        /**
-         * 销毁之后不需要重置[_target]为null，因为[MAP_HOLDER]已经不持有当前对象了。
-         * 外部不应该主动持有当前对象，延长当前对象的生命周期。
-         */
-        isDestroyed = true
-        /**
-         * 销毁逻辑真正执行之前触发销毁回调，允许子类在回调中获取Item，做一些额外的销毁操作。
-         */
-        onDestroy()
-
-        remove(_target)
-        clearItem()
-    }
-
-    /**
-     * 销毁回调
-     */
-    protected open fun onDestroy() {
+    protected open fun onDetach() {
     }
 
     interface Item<T> : AutoCloseable {
