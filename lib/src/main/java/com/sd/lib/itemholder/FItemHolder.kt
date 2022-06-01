@@ -169,7 +169,8 @@ open class FItemHolder<T> protected constructor(target: T) {
         }
 
         /**
-         * 返回target对应的holder
+         * 返回target对应的holder，开发者需要手动触发[attach]和[detach]来管理对象的生命周期。
+         * 调用[attach]之后，再次调用此方法，则返回的是同一个holder对象，直到该holder被[detach]
          */
         @JvmStatic
         fun <T : Any> target(target: T): FItemHolder<T> {
