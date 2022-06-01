@@ -145,7 +145,7 @@ open class FItemHolder<T> protected constructor(target: T) {
             if (it is AutoCloseable) {
                 try {
                     /**
-                     * 如果Item在关闭的过程中，调用[attach]会失败，因为当前holder对象还未被移除
+                     * 如果Item在关闭的过程中，调用[attach]会失败，因为当前holder对象还在[MAP_HOLDER]中
                      */
                     it.close()
                 } catch (e: Exception) {
