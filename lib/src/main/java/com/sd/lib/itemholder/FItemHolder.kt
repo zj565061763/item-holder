@@ -176,6 +176,7 @@ open class FItemHolder<T>(target: T) {
         @JvmStatic
         @Synchronized
         fun <T : Any> target(target: T): FItemHolder<T> {
+            require(target !is Activity) { "You should use activity() instead" }
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FItemHolder<T>
 
