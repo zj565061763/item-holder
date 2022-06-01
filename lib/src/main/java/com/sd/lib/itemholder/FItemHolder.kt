@@ -10,6 +10,16 @@ open class FItemHolder<T>(target: T) {
     private val _target: T
     private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
 
+    /**
+     * 当前对象是否已经被销毁
+     */
+    @Volatile
+    var isDestroyed = false
+        private set(value) {
+            require(value)
+            field = value
+        }
+
     init {
         _target = target
     }
@@ -57,7 +67,9 @@ open class FItemHolder<T>(target: T) {
         val item = createItem(clazz)
         _mapItemHolder[clazz] = item
 
-        initItem(item, _target)
+        if (!isDestroyed) {
+            initItem(item, _target)
+        }
         return item
     }
 
@@ -86,11 +98,17 @@ open class FItemHolder<T>(target: T) {
     }
 
     /**
-     * 销毁当前对象
-     *
-     * 如果自定义了实现类，需要在合适的时机调用此方法销毁，否则会一直被持有
+     * 销毁当前对象。
+     * 如果自定义了子类，需要在合适的时机调用销毁，否则当前对象会一直被[MAP_HOLDER]持有。
      */
     protected open fun destroy() {
+        if (isDestroyed) return
+
+        /**
+         * 销毁之后不需要重置[_target]为null，因为[MAP_HOLDER]已经不持有当前对象了。
+         * 如果外部持有了当前对象，要自己注意不要延长当前对象的生命周期，导致内存泄露
+         */
+        isDestroyed = true
         remove(_target)
         clearItem()
     }
