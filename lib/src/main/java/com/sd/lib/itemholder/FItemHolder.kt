@@ -57,7 +57,8 @@ open class FItemHolder<T>(target: T) {
     }
 
     /**
-     * 获得Item，如果不存在则创建返回
+     * 获得Item，如果不存在则创建返回。
+     * 注意：如果[isAttached]为false，则创建的Item未初始化
      */
     @Synchronized
     fun <I : Item<T>> getOrCreateItem(clazz: Class<I>): I {
