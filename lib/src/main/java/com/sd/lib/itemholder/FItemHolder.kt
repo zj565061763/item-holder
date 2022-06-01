@@ -3,20 +3,19 @@ package com.sd.lib.itemholder
 import android.app.Activity
 import android.content.Context
 import com.sd.lib.itemholder.impl.FActivityItemHolder
-import java.lang.ref.WeakReference
 import java.lang.reflect.Modifier
 import java.util.*
 
 open class FItemHolder<T>(target: T) {
-    private val _targetRef: WeakReference<T>
+    private val _target: T
     private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
 
     init {
-        _targetRef = WeakReference(target)
+        _target = target
     }
 
-    protected fun getTarget(): T? {
-        return _targetRef.get()
+    protected fun getTarget(): T {
+        return _target
     }
 
     /**
@@ -58,10 +57,7 @@ open class FItemHolder<T>(target: T) {
         val item = createItem(clazz)
         _mapItemHolder[clazz] = item
 
-        val target = getTarget()
-        if (target != null) {
-            initItem(item, target)
-        }
+        initItem(item, _target)
         return item
     }
 
@@ -95,7 +91,7 @@ open class FItemHolder<T>(target: T) {
      * 如果自定义了实现类，需要在合适的时机调用此方法销毁，否则会一直被持有
      */
     protected open fun destroy() {
-        remove(getTarget())
+        remove(_target)
         clearItem()
     }
 
