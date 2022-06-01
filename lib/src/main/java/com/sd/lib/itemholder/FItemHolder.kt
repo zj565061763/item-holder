@@ -74,6 +74,13 @@ open class FItemHolder<T>(target: T) {
     }
 
     /**
+     * 创建Item
+     */
+    protected open fun <I : Item<T>> createItem(clazz: Class<I>): I {
+        return clazz.newInstance()
+    }
+
+    /**
      * 初始化Item
      */
     protected open fun <I : Item<T>> initItem(item: I, target: T) {
@@ -113,12 +120,6 @@ open class FItemHolder<T>(target: T) {
         clearItem()
     }
 
-    /**
-     * 创建Item
-     */
-    protected open fun <I : Item<T>> createItem(clazz: Class<I>): I {
-        return clazz.newInstance()
-    }
 
     interface Item<T> : AutoCloseable {
         /**
