@@ -191,7 +191,7 @@ open class FItemHolder<T> protected constructor(target: T) {
             val target = holder._target!!
             synchronized(MAP_HOLDER) {
                 if (MAP_HOLDER.containsKey(target)) {
-                    throw RuntimeException("there is a holder has been attached with target:$target")
+                    throw RuntimeException("there is a holder has attached with target:$target")
                 } else {
                     MAP_HOLDER[target] = holder
                 }
