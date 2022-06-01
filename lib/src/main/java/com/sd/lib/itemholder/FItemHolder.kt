@@ -110,12 +110,19 @@ open class FItemHolder<T> protected constructor(target: T) {
     /**
      * 将当前对象添加到[MAP_HOLDER]
      */
-    @Synchronized
     fun attach(): Boolean {
         if (isAttached) return true
-        if (onAttach()) {
-            addHolder(this)
-            isAttached = true
+
+        synchronized(MAP_HOLDER) {
+            val target = _target!!
+            if (MAP_HOLDER.containsKey(target)) {
+                throw RuntimeException("there is a holder has attached with target:$target")
+            }
+
+            if (onAttach()) {
+                MAP_HOLDER[target] = this
+                isAttached = true
+            }
         }
         return isAttached
     }
@@ -151,7 +158,9 @@ open class FItemHolder<T> protected constructor(target: T) {
         try {
             onDetach()
         } finally {
-            removeHolder(this)
+            synchronized(MAP_HOLDER) {
+                MAP_HOLDER.remove(_target!!)
+            }
         }
     }
 
@@ -210,33 +219,6 @@ open class FItemHolder<T> protected constructor(target: T) {
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FItemHolder<T>
             return FItemHolder(target)
-        }
-
-        /**
-         * 添加holder
-         */
-        private fun addHolder(holder: FItemHolder<*>) {
-            val target = holder._target!!
-            synchronized(MAP_HOLDER) {
-                checkHasHolder(holder)
-                MAP_HOLDER[target] = holder
-            }
-        }
-
-        /**
-         * 移除holder
-         */
-        private fun removeHolder(holder: FItemHolder<*>) {
-            synchronized(MAP_HOLDER) {
-                MAP_HOLDER.remove(holder._target)
-            }
-        }
-
-        private fun checkHasHolder(holder: FItemHolder<*>) {
-            val target = holder._target!!
-            if (MAP_HOLDER.containsKey(target)) {
-                throw RuntimeException("there is a holder has attached with target:$target")
-            }
         }
     }
 }
