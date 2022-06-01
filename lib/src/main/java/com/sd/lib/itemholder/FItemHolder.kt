@@ -117,12 +117,12 @@ open class FItemHolder<T>(target: T) {
          * 外部不应该主动持有当前对象，延长当前对象的生命周期。
          */
         isAttached = false
-        /**
-         * 销毁逻辑真正执行之前触发销毁回调，允许子类在回调中获取Item，做一些额外的销毁操作。
-         */
-        onDetach()
         removeHolder(this)
 
+        /**
+         * 销毁逻辑执行之前触发，允许子类在回调中获取Item，做一些额外的同步操作。
+         */
+        onDetach()
         _mapItemHolder.values.forEach {
             if (it is AutoCloseable) {
                 try {
