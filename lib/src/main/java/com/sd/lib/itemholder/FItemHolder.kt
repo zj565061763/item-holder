@@ -98,7 +98,7 @@ open class FItemHolder<T>(target: T) {
     fun attach(): Boolean {
         if (isAttached) return true
         if (onAttach()) {
-            attachHolder(this)
+            addHolder(this)
             isAttached = true
         }
         return isAttached
@@ -121,7 +121,7 @@ open class FItemHolder<T>(target: T) {
          * 销毁逻辑真正执行之前触发销毁回调，允许子类在回调中获取Item，做一些额外的销毁操作。
          */
         onDetach()
-        detachHolder(this)
+        removeHolder(this)
 
         _mapItemHolder.values.forEach {
             if (it is AutoCloseable) {
@@ -160,48 +160,45 @@ open class FItemHolder<T>(target: T) {
         private val MAP_HOLDER = mutableMapOf<Any, FItemHolder<*>>()
 
         @JvmStatic
-        @Synchronized
-        fun activity(context: Context): FItemHolder<Activity> {
-            require(context is Activity) { "target must be instance of ${Activity::class.java}" }
-            val cache = MAP_HOLDER[context]
+        fun activity(target: Context): FItemHolder<Activity> {
+            require(target is Activity) { "context should be instance of ${Activity::class.java}" }
+            val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FActivityItemHolder
-
-            val holder = FActivityItemHolder(context)
-            if (holder.attach()) {
-                MAP_HOLDER[context] = holder
-            }
-            return holder
+            return FActivityItemHolder(target).also { it.attach() }
         }
 
+        /**
+         * 返回target对应的holder
+         */
         @JvmStatic
-        @Synchronized
         fun <T : Any> target(target: T): FItemHolder<T> {
             require(target !is Activity) { "You should use activity() instead" }
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FItemHolder<T>
-
-            val holder = FItemHolder(target)
-            if (holder.attach()) {
-                MAP_HOLDER[target] = holder
-            }
-            return holder
+            return FItemHolder(target).also { it.attach() }
         }
 
-        @JvmStatic
-        @Synchronized
-        private fun attachHolder(holder: FItemHolder<*>) {
+        /**
+         * 添加holder
+         */
+        private fun addHolder(holder: FItemHolder<*>) {
             val target = holder._target!!
-            if (MAP_HOLDER.containsKey(target)) {
-                throw RuntimeException("target holder has been attached.")
-            } else {
-                MAP_HOLDER[target] = holder
+            synchronized(MAP_HOLDER) {
+                if (MAP_HOLDER.containsKey(target)) {
+                    throw RuntimeException("target holder has been attached.")
+                } else {
+                    MAP_HOLDER[target] = holder
+                }
             }
         }
 
-        @JvmStatic
-        @Synchronized
-        private fun detachHolder(holder: FItemHolder<*>) {
-            MAP_HOLDER.remove(holder._target)
+        /**
+         * 移除holder
+         */
+        private fun removeHolder(holder: FItemHolder<*>) {
+            synchronized(MAP_HOLDER) {
+                MAP_HOLDER.remove(holder._target)
+            }
         }
     }
 }
