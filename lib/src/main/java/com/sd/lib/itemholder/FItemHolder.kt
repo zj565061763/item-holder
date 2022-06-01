@@ -118,22 +118,25 @@ open class FItemHolder<T> protected constructor(target: T) {
          * 外部不应该主动持有当前对象，延长当前对象的生命周期。
          */
         isAttached = false
-        removeHolder(this)
 
-        /**
-         * 销毁逻辑执行之前触发，允许子类在回调中获取Item，做一些额外的同步操作。
-         */
-        onDetach()
-        _mapItemHolder.values.forEach {
-            if (it is AutoCloseable) {
-                try {
-                    it.close()
-                } catch (e: Exception) {
-                    e.printStackTrace()
+        try {
+            /**
+             * 销毁逻辑执行之前触发，允许子类在回调中获取Item，做一些额外的同步操作。
+             */
+            onDetach()
+            _mapItemHolder.values.forEach {
+                if (it is AutoCloseable) {
+                    try {
+                        it.close()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
+            _mapItemHolder.clear()
+        } finally {
+            removeHolder(this)
         }
-        _mapItemHolder.clear()
     }
 
     /**
