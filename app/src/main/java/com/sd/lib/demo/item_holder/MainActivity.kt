@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             require(FItemHolder.activity(this@MainActivity).isAttached.not())
             Log.i(TAG, "onDestroy check OK!")
-        }, 5000)
+        }, 3000)
     }
 
     companion object {
