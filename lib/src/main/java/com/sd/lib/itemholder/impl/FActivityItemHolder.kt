@@ -7,11 +7,6 @@ import com.sd.lib.itemholder.FItemHolder
 
 internal class FActivityItemHolder(activity: Activity) : FItemHolder<Activity>(activity) {
 
-    override fun <I : Item<Activity>> initItem(item: I, target: Activity): Boolean {
-        if (target.isFinishing) return false
-        return super.initItem(item, target)
-    }
-
     override fun onAttach(): Boolean {
         if (getTarget().isFinishing) return false
         getTarget().application.registerActivityLifecycleCallbacks(_lifecycleCallback)
