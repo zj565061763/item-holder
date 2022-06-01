@@ -37,20 +37,24 @@ open class FItemHolder<T>(target: T) {
      * 保存Item
      */
     @Synchronized
-    fun putItem(item: Any) {
+    fun putItem(item: Any): Boolean {
         if (isAttached) {
             _mapItemHolder[item.javaClass] = item
+            return true
         }
+        return false
     }
 
     /**
      * 保存Item
      */
     @Synchronized
-    fun <I> putItem(clazz: Class<in I>, item: I) {
+    fun <I> putItem(clazz: Class<in I>, item: I): Boolean {
         if (isAttached) {
             _mapItemHolder[clazz] = item!!
+            return true
         }
+        return false
     }
 
     /**
