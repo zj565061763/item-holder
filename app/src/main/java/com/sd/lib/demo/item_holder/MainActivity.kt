@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         testPutItem()
         testPutItemByClass()
         testTarget()
+        testApp()
 //        testCrash()
     }
 
@@ -45,11 +46,17 @@ class MainActivity : AppCompatActivity() {
     private fun testTarget() {
         FItemHolder.target("1").let {
             it.attach()
-            it.putItem("OK")
+            it.putItem("target string")
         }
 
         val item = FItemHolder.target("1").getItem(String::class.java)
         Log.i(TAG, "target stringItem:$item")
+    }
+
+    private fun testApp() {
+        FItemHolder.app().putItem("app string")
+        val item = FItemHolder.app().getItem(String::class.java)
+        Log.i(TAG, "app stringItem:$item")
     }
 
     private fun testCrash() {

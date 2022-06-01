@@ -1,8 +1,8 @@
 package com.sd.lib.itemholder
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
-import com.sd.lib.itemholder.impl.FActivityItemHolder
 import java.lang.reflect.Modifier
 
 open class FItemHolder<T> protected constructor(target: T) {
@@ -170,6 +170,15 @@ open class FItemHolder<T> protected constructor(target: T) {
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FActivityItemHolder
             return FActivityItemHolder(target).also { it.attach() }
+        }
+
+        /**
+         * Application对象对应的holder，整个应用生命周期中，此方法返回的是同一个holder对象
+         */
+        @JvmStatic
+        fun app(): FItemHolder<Application> {
+            val target = ApplicationContentProvider.application!!
+            return target(target).also { it.attach() }
         }
 
         /**

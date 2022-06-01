@@ -1,4 +1,4 @@
-package com.sd.lib.itemholder.impl
+package com.sd.lib.itemholder
 
 import android.app.Activity
 import android.app.Application
