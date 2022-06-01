@@ -97,7 +97,7 @@ open class FItemHolder<T>(target: T) {
      * 子类需要在合适的时机调用销毁，否则当前对象会一直被持有。
      */
     @Synchronized
-    protected fun detach() {
+    fun detach() {
         if (!isAttached) return
 
         /**
