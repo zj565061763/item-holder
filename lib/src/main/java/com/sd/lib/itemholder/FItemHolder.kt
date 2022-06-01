@@ -85,9 +85,8 @@ open class FItemHolder<T> internal constructor(target: T) {
 
         val item = createItem(clazz)
         if (isAttached) {
-            if (initItem(item, _target)) {
-                _mapItemHolder[clazz] = item
-            }
+            item.init(_target)
+            _mapItemHolder[clazz] = item
         }
         return item
     }
@@ -97,14 +96,6 @@ open class FItemHolder<T> internal constructor(target: T) {
      */
     protected open fun <I : Item<T>> createItem(clazz: Class<I>): I {
         return clazz.newInstance()
-    }
-
-    /**
-     * 初始化Item
-     */
-    protected open fun <I : Item<T>> initItem(item: I, target: T): Boolean {
-        item.init(target)
-        return true
     }
 
     /**
