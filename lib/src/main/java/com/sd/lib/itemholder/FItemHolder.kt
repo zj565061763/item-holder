@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import java.lang.reflect.Modifier
 
-open class FItemHolder<T> protected constructor(target: T) {
+open class FItemHolder<T> internal constructor(target: T) {
     private val _target: T
     private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
 
