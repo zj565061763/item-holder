@@ -7,12 +7,11 @@ import java.lang.ref.WeakReference
 import java.lang.reflect.Modifier
 import java.util.*
 
-open class FItemHolder<T> {
-    private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
+open class FItemHolder<T>(target: T) {
     private val _targetRef: WeakReference<T>
+    private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
 
-    constructor(target: T) {
-        requireNotNull(target) { "target is null" }
+    init {
         _targetRef = WeakReference(target)
     }
 
@@ -30,7 +29,7 @@ open class FItemHolder<T> {
      */
     @Synchronized
     fun putItem(item: Any) {
-        _mapItemHolder[item::class.java] = item
+        _mapItemHolder[item.javaClass] = item
     }
 
     /**
