@@ -5,8 +5,7 @@
     <application>
         <provider
             android:name="com.sd.lib.itemholder.ApplicationContentProvider"
-            android:authorities="${applicationId}.f-appprovider-itemholder"
-            android:exported="false"
-            android:multiprocess="true" />
+            android:authorities="${applicationId}.f-provider-itemholder"
+            android:exported="false" />
     </application>
 </manifest>
