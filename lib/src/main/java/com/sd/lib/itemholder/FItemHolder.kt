@@ -57,6 +57,21 @@ open class FItemHolder<T> protected constructor(target: T) {
     }
 
     /**
+     * 移除Item
+     */
+    fun removeItem(item: Any) {
+        removeItem(item.javaClass)
+    }
+
+    /**
+     * 移除Item
+     */
+    @Synchronized
+    fun removeItem(clazz: Class<*>) {
+        _mapItemHolder.remove(clazz)
+    }
+
+    /**
      * 获得Item，如果不存在则创建返回。
      * 注意：如果[isAttached]为false，则创建的Item未初始化
      */
