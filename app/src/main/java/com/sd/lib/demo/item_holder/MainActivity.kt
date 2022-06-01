@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.sd.lib.demo.item_holder.item.ApplicationItem
 import com.sd.lib.demo.item_holder.item.ChildItem
 import com.sd.lib.demo.item_holder.item.IParent
 import com.sd.lib.demo.item_holder.item.TestItem
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private fun testItem() {
         require(
             FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
-                    == FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
+                    === FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
         )
         val testItem = FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
         testItem.sayHello()
@@ -57,6 +58,11 @@ class MainActivity : AppCompatActivity() {
         FItemHolder.app().putItem("app string")
         val item = FItemHolder.app().getItem(String::class.java)
         Log.i(TAG, "app stringItem:$item")
+
+        require(
+            FItemHolder.app().getOrCreateItem(ApplicationItem::class.java)
+                    === FItemHolder.app().getOrCreateItem(ApplicationItem::class.java)
+        )
     }
 
     private fun testCrash() {
