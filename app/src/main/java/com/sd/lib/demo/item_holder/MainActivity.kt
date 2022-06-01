@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
         testItem()
         testPutItem()
         testPutItemByClass()
+//        testCrash()
     }
 
     private fun testItem() {
