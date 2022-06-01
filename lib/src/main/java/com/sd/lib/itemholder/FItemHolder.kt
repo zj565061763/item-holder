@@ -210,11 +210,13 @@ open class FItemHolder<T> internal constructor(target: T) {
         }
 
         /**
+         * 暂时不对外开发此方法
+         *
          * 返回target对应的holder，开发者需要手动触发[attach]和[detach]来管理生命周期。
          * [attach]之后，此方法返回的是与该target绑定的同一个holder对象，直到该holder被[detach]。
          */
         @JvmStatic
-        fun <T : Any> target(target: T): FItemHolder<T> {
+        private fun <T : Any> target(target: T): FItemHolder<T> {
             require(target !is Activity) { "You should use activity() instead" }
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FItemHolder<T>
