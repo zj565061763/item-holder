@@ -76,7 +76,7 @@ open class FItemHolder<T> internal constructor(target: T) {
      * 注意：如果[isAttached]为false，则创建的Item未初始化
      */
     @Synchronized
-    fun <I : Item<T>> getOrCreateItem(clazz: Class<I>): I {
+    fun <I : Item<T>> get(clazz: Class<I>): I {
         require(!clazz.isInterface) { "class should not be an interface." }
         require(!Modifier.isAbstract(clazz.modifiers)) { "class should not be abstract." }
 

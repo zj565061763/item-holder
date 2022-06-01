@@ -23,10 +23,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun testItem() {
         require(
-            FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
-                    === FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
+            FItemHolder.activity(this).get(TestItem::class.java)
+                    === FItemHolder.activity(this).get(TestItem::class.java)
         )
-        val testItem = FItemHolder.activity(this).getOrCreateItem(TestItem::class.java)
+        val testItem = FItemHolder.activity(this).get(TestItem::class.java)
         testItem.sayHello()
     }
 
@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "app stringItem:$item")
 
         require(
-            FItemHolder.app().getOrCreateItem(ApplicationItem::class.java)
-                    === FItemHolder.app().getOrCreateItem(ApplicationItem::class.java)
+            FItemHolder.app().get(ApplicationItem::class.java)
+                    === FItemHolder.app().get(ApplicationItem::class.java)
         )
     }
 
