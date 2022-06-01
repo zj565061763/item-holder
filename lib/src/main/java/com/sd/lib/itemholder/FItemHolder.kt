@@ -119,21 +119,22 @@ open class FItemHolder<T> protected constructor(target: T) {
          */
         isAttached = false
 
-        try {
-            /**
-             * 销毁逻辑执行之前触发，允许子类在回调中获取Item，做一些额外的同步操作。
-             */
-            onDetach()
-            _mapItemHolder.values.forEach {
-                if (it is AutoCloseable) {
-                    try {
-                        it.close()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+        _mapItemHolder.values.forEach {
+            if (it is AutoCloseable) {
+                try {
+                    /**
+                     * 如果Item在关闭的过程中，调用[attach]会失败，因为当前holder对象还未被移除
+                     */
+                    it.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
-            _mapItemHolder.clear()
+        }
+        _mapItemHolder.clear()
+
+        try {
+            onDetach()
         } finally {
             removeHolder(this)
         }
