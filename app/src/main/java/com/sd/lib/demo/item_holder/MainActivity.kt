@@ -1,6 +1,8 @@
 package com.sd.lib.demo.item_holder
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.sd.lib.demo.item_holder.item.ChildItem
@@ -36,6 +38,14 @@ class MainActivity : AppCompatActivity() {
         FItemHolder.activity(this).putItem(IParent::class.java, ChildItem())
         val item = FItemHolder.activity(this).getItem(IParent::class.java)
         item?.startRun()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Handler(Looper.getMainLooper()).postDelayed({
+            require(FItemHolder.activity(this@MainActivity).isAttached.not())
+            Log.i(TAG, "onDestroy check OK!")
+        }, 5000)
     }
 
     companion object {
