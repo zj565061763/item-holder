@@ -32,19 +32,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun testPutItem() {
         FItemHolder.activity(this).putItem("ok")
-        val item = FItemHolder.activity(this).getItem(String::class.java)
+        val item = FItemHolder.activity(this).getOrNull(String::class.java)
         Log.i(TAG, "stringItem:$item")
     }
 
     private fun testPutItemByClass() {
         FItemHolder.activity(this).putItem(IParent::class.java, ChildItem())
-        val item = FItemHolder.activity(this).getItem(IParent::class.java)
+        val item = FItemHolder.activity(this).getOrNull(IParent::class.java)
         item?.startRun()
     }
 
     private fun testApp() {
         FItemHolder.app().putItem("app string")
-        val item = FItemHolder.app().getItem(String::class.java)
+        val item = FItemHolder.app().getOrNull(String::class.java)
         Log.i(TAG, "app stringItem:$item")
 
         require(

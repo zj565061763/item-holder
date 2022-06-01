@@ -27,7 +27,7 @@ open class FItemHolder<T> internal constructor(target: T) {
     /**
      * 获取Item
      */
-    fun <I> getItem(clazz: Class<I>): I? {
+    fun <I> getOrNull(clazz: Class<I>): I? {
         val item = _mapItemHolder[clazz] ?: return null
         return item as I
     }
