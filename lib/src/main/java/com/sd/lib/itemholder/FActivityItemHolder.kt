@@ -3,19 +3,17 @@ package com.sd.lib.itemholder
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import com.sd.lib.itemholder.FItemHolder
 
 internal class FActivityItemHolder(activity: Activity) : FItemHolder<Activity>(activity) {
+    private val _activity = activity
 
-    override fun onAttach(): Boolean {
-        if (getTarget().isFinishing) return false
-        getTarget().application.registerActivityLifecycleCallbacks(_lifecycleCallback)
-        return super.onAttach()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        getTarget().application.unregisterActivityLifecycleCallbacks(_lifecycleCallback)
+    override fun init(): Boolean {
+        if (_activity.isFinishing) return false
+        with(_activity.application) {
+            unregisterActivityLifecycleCallbacks(_lifecycleCallback)
+            registerActivityLifecycleCallbacks(_lifecycleCallback)
+        }
+        return true
     }
 
     private val _lifecycleCallback = object : Application.ActivityLifecycleCallbacks {
@@ -38,8 +36,9 @@ internal class FActivityItemHolder(activity: Activity) : FItemHolder<Activity>(a
         }
 
         override fun onActivityDestroyed(activity: Activity) {
-            if (getTarget() == activity) {
-                detach()
+            if (_activity == activity) {
+                _activity.application.unregisterActivityLifecycleCallbacks(this)
+                destroy()
             }
         }
     }

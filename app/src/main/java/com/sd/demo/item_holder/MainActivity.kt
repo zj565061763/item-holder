@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.sd.demo.item_holder.R
 import com.sd.demo.item_holder.item.ChildItem
 import com.sd.demo.item_holder.item.IParent
 import com.sd.demo.item_holder.item.TestItem
@@ -31,20 +30,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun testPutItem() {
         FItemHolder.activity(this).putItem("ok")
-        val item = FItemHolder.activity(this).getOrNull(String::class.java)
+        val item = FItemHolder.activity(this).query(String::class.java)
         Log.i(TAG, "stringItem:$item")
     }
 
     private fun testPutItemByClass() {
         FItemHolder.activity(this).putItem(IParent::class.java, ChildItem())
-        val item = FItemHolder.activity(this).getOrNull(IParent::class.java)
+        val item = FItemHolder.activity(this).query(IParent::class.java)
         item?.startRun()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Handler(Looper.getMainLooper()).postDelayed({
-            require(FItemHolder.activity(this@MainActivity).isAttached.not())
+            require(FItemHolder.activity(this@MainActivity).isActive.not())
             Log.i(TAG, "onDestroy check OK!")
         }, 3000)
     }
