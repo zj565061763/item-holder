@@ -12,22 +12,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        testItem()
-        testPutItem()
+        testGetItem()
         testPutItemByClass()
     }
 
-    private fun testItem() {
+    private fun testGetItem() {
         val item1 = FItemHolder.activity(this).get(TestItem::class.java)
         val item2 = FItemHolder.activity(this).get(TestItem::class.java)
         check(item1 === item2)
         item1.run()
-    }
-
-    private fun testPutItem() {
-        FItemHolder.activity(this).putItem("ok")
-        val item = FItemHolder.activity(this).query(String::class.java)
-        logMsg { "stringItem:$item" }
     }
 
     private fun testPutItemByClass() {

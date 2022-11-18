@@ -22,17 +22,19 @@ abstract class FItemHolder<T> internal constructor(target: T) {
     /**
      * 获得Item，如果不存在则创建返回。
      */
-    fun <I : Item<T>> get(clazz: Class<I>): I {
+    fun <I> get(clazz: Class<I>): I {
         require(!clazz.isInterface) { "class should not be an interface." }
         require(!Modifier.isAbstract(clazz.modifiers)) { "class should not be abstract." }
         synchronized(Companion) {
             val cache = _itemHolder[clazz]
             if (cache != null) return cache as I
 
-            val item = createItem(clazz)
+            val item = clazz.newInstance()
             if (isActive) {
-                item.init(_target)
-                _itemHolder[clazz] = item
+                if (item is Item) {
+                    item.init()
+                }
+                _itemHolder[clazz] = item!!
             }
             return item
         }
@@ -79,13 +81,6 @@ abstract class FItemHolder<T> internal constructor(target: T) {
     }
 
     /**
-     * 创建Item
-     */
-    protected open fun <I : Item<T>> createItem(clazz: Class<I>): I {
-        return clazz.newInstance()
-    }
-
-    /**
      * 初始化
      */
     internal fun internalInit(): Boolean {
@@ -119,11 +114,11 @@ abstract class FItemHolder<T> internal constructor(target: T) {
         }
     }
 
-    interface Item<T> : AutoCloseable {
+    interface Item : AutoCloseable {
         /**
          * 初始化
          */
-        fun init(target: T)
+        fun init()
     }
 
     companion object {
