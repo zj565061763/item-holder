@@ -1,8 +1,8 @@
-package com.sd.lib.demo.item_holder.item
+package com.sd.demo.item_holder.item
 
 import android.app.Activity
 import android.util.Log
-import com.sd.lib.demo.item_holder.MainActivity
+import com.sd.demo.item_holder.MainActivity
 import com.sd.lib.itemholder.FItemHolder
 
 class TestItem : FItemHolder.Item<Activity> {

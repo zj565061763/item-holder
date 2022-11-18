@@ -1,7 +1,7 @@
-package com.sd.lib.demo.item_holder.item
+package com.sd.demo.item_holder.item
 
 import android.util.Log
-import com.sd.lib.demo.item_holder.MainActivity
+import com.sd.demo.item_holder.MainActivity
 
 class ChildItem : IParent, AutoCloseable {
     override fun startRun() {

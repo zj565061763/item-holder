@@ -4,9 +4,10 @@ plugins {
 }
 
 android {
+    namespace 'com.sd.demo.item_holder'
     compileSdk 33
     defaultConfig {
-        applicationId "com.sd.lib.demo.item_holder"
+        applicationId "com.sd.demo.item_holder"
         minSdk 21
         targetSdk 33
         versionCode 1

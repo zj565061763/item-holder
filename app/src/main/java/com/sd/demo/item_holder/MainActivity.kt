@@ -1,13 +1,14 @@
-package com.sd.lib.demo.item_holder
+package com.sd.demo.item_holder
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.sd.lib.demo.item_holder.item.ChildItem
-import com.sd.lib.demo.item_holder.item.IParent
-import com.sd.lib.demo.item_holder.item.TestItem
+import com.sd.demo.item_holder.R
+import com.sd.demo.item_holder.item.ChildItem
+import com.sd.demo.item_holder.item.IParent
+import com.sd.demo.item_holder.item.TestItem
 import com.sd.lib.itemholder.FItemHolder
 
 class MainActivity : AppCompatActivity() {
