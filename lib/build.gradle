@@ -9,12 +9,11 @@ def libArtifactId = "item-holder"
 def libVersionName = "1.0.0-beta04"
 
 android {
-    compileSdk 32
+    namespace 'com.sd.lib.itemholder'
+    compileSdk 33
     defaultConfig {
         minSdk 21
-        targetSdk 32
-
-        consumerProguardFiles "consumer-rules.pro"
+        targetSdk 33
     }
 
     buildTypes {
@@ -34,7 +33,6 @@ android {
 }
 
 dependencies {
-
 }
 
 task generateSourcesJar(type: Jar) {

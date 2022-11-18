@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.sd.lib.demo.item_holder.item.ApplicationItem
 import com.sd.lib.demo.item_holder.item.ChildItem
 import com.sd.lib.demo.item_holder.item.IParent
 import com.sd.lib.demo.item_holder.item.TestItem
@@ -18,7 +17,6 @@ class MainActivity : AppCompatActivity() {
         testItem()
         testPutItem()
         testPutItemByClass()
-        testApp()
     }
 
     private fun testItem() {
@@ -40,17 +38,6 @@ class MainActivity : AppCompatActivity() {
         FItemHolder.activity(this).putItem(IParent::class.java, ChildItem())
         val item = FItemHolder.activity(this).getOrNull(IParent::class.java)
         item?.startRun()
-    }
-
-    private fun testApp() {
-        FItemHolder.app().putItem("app string")
-        val item = FItemHolder.app().getOrNull(String::class.java)
-        Log.i(TAG, "app stringItem:$item")
-
-        require(
-            FItemHolder.app().get(ApplicationItem::class.java)
-                    === FItemHolder.app().get(ApplicationItem::class.java)
-        )
     }
 
     override fun onDestroy() {

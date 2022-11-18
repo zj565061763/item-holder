@@ -1,7 +1,6 @@
 package com.sd.lib.itemholder
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import java.lang.reflect.Modifier
 
@@ -189,29 +188,6 @@ open class FItemHolder<T> internal constructor(target: T) {
             val cache = MAP_HOLDER[target]
             if (cache != null) return cache as FActivityItemHolder
             return FActivityItemHolder(target).also { it.attach() }
-        }
-
-        /**
-         * Application对象对应的holder，整个应用生命周期中，此方法返回的是同一个holder对象
-         */
-        @JvmStatic
-        fun app(): FItemHolder<Application> {
-            val target = ApplicationContentProvider.application!!
-            return target(target).also { it.attach() }
-        }
-
-        /**
-         * 暂时不对外开发此方法
-         *
-         * 返回target对应的holder，开发者需要手动触发[attach]和[detach]来管理生命周期。
-         * [attach]之后，此方法返回的是与该target绑定的同一个holder对象，直到该holder被[detach]。
-         */
-        @JvmStatic
-        private fun <T : Any> target(target: T): FItemHolder<T> {
-            require(target !is Activity) { "You should use activity() instead" }
-            val cache = MAP_HOLDER[target]
-            if (cache != null) return cache as FItemHolder<T>
-            return FItemHolder(target)
         }
     }
 }
