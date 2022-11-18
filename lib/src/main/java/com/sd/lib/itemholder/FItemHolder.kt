@@ -9,7 +9,7 @@ open class FItemHolder<T> internal constructor(target: T) {
     private val _mapItemHolder = mutableMapOf<Class<*>, Any>()
 
     /**
-     * 当前对象是否已经添加到[MAP_HOLDER]
+     * 当前对象是否已经添加到[MapHolder]
      */
     @Volatile
     var isAttached = false
@@ -98,19 +98,19 @@ open class FItemHolder<T> internal constructor(target: T) {
     }
 
     /**
-     * 将当前对象添加到[MAP_HOLDER]
+     * 将当前对象添加到[MapHolder]
      */
     fun attach(): Boolean {
         if (isAttached) return true
 
-        synchronized(MAP_HOLDER) {
+        synchronized(MapHolder) {
             val target = _target!!
-            if (MAP_HOLDER.containsKey(target)) {
+            if (MapHolder.containsKey(target)) {
                 throw RuntimeException("there is a holder has attached with target:$target")
             }
 
             if (onAttach()) {
-                MAP_HOLDER[target] = this
+                MapHolder[target] = this
                 isAttached = true
             }
         }
@@ -118,7 +118,7 @@ open class FItemHolder<T> internal constructor(target: T) {
     }
 
     /**
-     * 将当前对象，从[MAP_HOLDER]中移除，并清空所有Item。
+     * 将当前对象，从[MapHolder]中移除，并清空所有Item。
      * 子类需要在合适的时机调用销毁，否则当前对象会一直被持有。
      */
     @Synchronized
@@ -126,7 +126,7 @@ open class FItemHolder<T> internal constructor(target: T) {
         if (!isAttached) return
 
         /**
-         * 销毁之后不需要重置[_target]为null，因为[MAP_HOLDER]已经不持有当前对象了。
+         * 销毁之后不需要重置[_target]为null，因为[MapHolder]已经不持有当前对象了。
          * 外部不应该主动持有当前对象，延长当前对象的生命周期。
          */
         isAttached = false
@@ -135,7 +135,7 @@ open class FItemHolder<T> internal constructor(target: T) {
             if (it is AutoCloseable) {
                 try {
                     /**
-                     * 如果Item在关闭的过程中，调用[attach]会失败，因为当前holder对象还在[MAP_HOLDER]中
+                     * 如果Item在关闭的过程中，调用[attach]会失败，因为当前holder对象还在[MapHolder]中
                      */
                     it.close()
                 } catch (e: Exception) {
@@ -148,14 +148,14 @@ open class FItemHolder<T> internal constructor(target: T) {
         try {
             onDetach()
         } finally {
-            synchronized(MAP_HOLDER) {
-                MAP_HOLDER.remove(_target!!)
+            synchronized(MapHolder) {
+                MapHolder.remove(_target!!)
             }
         }
     }
 
     /**
-     * 当前对象即将被添加到[MAP_HOLDER]，返回true-继续添加，返回false-停止添加
+     * 当前对象即将被添加到[MapHolder]，返回true-继续添加，返回false-停止添加
      */
     protected open fun onAttach(): Boolean {
         return true
@@ -176,7 +176,7 @@ open class FItemHolder<T> internal constructor(target: T) {
     }
 
     companion object {
-        private val MAP_HOLDER = mutableMapOf<Any, FItemHolder<*>>()
+        private val MapHolder = mutableMapOf<Any, FItemHolder<*>>()
 
         /**
          * 返回activity对应的holder，对象第一次被创建的时候会触发[attach]，并在activity销毁的时候触发[detach]。
@@ -185,7 +185,7 @@ open class FItemHolder<T> internal constructor(target: T) {
         @JvmStatic
         fun activity(target: Context): FItemHolder<Activity> {
             require(target is Activity) { "context should be instance of ${Activity::class.java}" }
-            val cache = MAP_HOLDER[target]
+            val cache = MapHolder[target]
             if (cache != null) return cache as FActivityItemHolder
             return FActivityItemHolder(target).also { it.attach() }
         }
