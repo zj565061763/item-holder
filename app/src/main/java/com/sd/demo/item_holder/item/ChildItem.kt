@@ -1,14 +1,13 @@
 package com.sd.demo.item_holder.item
 
-import android.util.Log
-import com.sd.demo.item_holder.MainActivity
+import com.sd.demo.item_holder.logMsg
 
 class ChildItem : IParent, AutoCloseable {
-    override fun startRun() {
-        Log.i(MainActivity.TAG, "startRun item:$this")
+    override fun run() {
+        logMsg { "$this run" }
     }
 
     override fun close() {
-        Log.i(MainActivity.TAG, "close item:$this")
+        logMsg { "$this close" }
     }
 }

@@ -1,20 +1,19 @@
 package com.sd.demo.item_holder.item
 
 import android.app.Activity
-import android.util.Log
-import com.sd.demo.item_holder.MainActivity
+import com.sd.demo.item_holder.logMsg
 import com.sd.lib.itemholder.FItemHolder
 
 class TestItem : FItemHolder.Item<Activity> {
     override fun init(target: Activity) {
-        Log.i(MainActivity.TAG, "init:${target} item:$this")
+        logMsg { "$this init:${target}" }
     }
 
-    fun sayHello() {
-        Log.i(MainActivity.TAG, "sayHello item:$this")
+    fun run() {
+        logMsg { "$this run" }
     }
 
     override fun close() {
-        Log.i(MainActivity.TAG, "close item:$this")
+        logMsg { "$this close" }
     }
 }

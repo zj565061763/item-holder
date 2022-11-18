@@ -1,8 +1,6 @@
 package com.sd.demo.item_holder
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.sd.demo.item_holder.item.ChildItem
@@ -20,35 +18,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun testItem() {
-        require(
-            FItemHolder.activity(this).get(TestItem::class.java)
-                    === FItemHolder.activity(this).get(TestItem::class.java)
-        )
-        val testItem = FItemHolder.activity(this).get(TestItem::class.java)
-        testItem.sayHello()
+        val item1 = FItemHolder.activity(this).get(TestItem::class.java)
+        val item2 = FItemHolder.activity(this).get(TestItem::class.java)
+        check(item1 === item2)
+        item1.run()
     }
 
     private fun testPutItem() {
         FItemHolder.activity(this).putItem("ok")
         val item = FItemHolder.activity(this).query(String::class.java)
-        Log.i(TAG, "stringItem:$item")
+        logMsg { "stringItem:$item" }
     }
 
     private fun testPutItemByClass() {
         FItemHolder.activity(this).putItem(IParent::class.java, ChildItem())
         val item = FItemHolder.activity(this).query(IParent::class.java)
-        item?.startRun()
+        item?.run()
     }
+}
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Handler(Looper.getMainLooper()).postDelayed({
-            require(FItemHolder.activity(this@MainActivity).isActive.not())
-            Log.i(TAG, "onDestroy check OK!")
-        }, 3000)
-    }
-
-    companion object {
-        const val TAG = "MainActivity"
-    }
+inline fun logMsg(block: () -> String) {
+    Log.i("FItemHolder-demo", block())
 }
